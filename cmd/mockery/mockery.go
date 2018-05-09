@@ -15,20 +15,21 @@ import (
 const regexMetadataChars = "\\.+*?()|[]{}^$"
 
 type Config struct {
-	fName      string
-	fPrint     bool
-	fOutput    string
-	fOutpkg    string
-	fDir       string
-	fRecursive bool
-	fAll       bool
-	fIP        bool
-	fTO        bool
-	fCase      string
-	fNote      string
-	fProfile   string
-	fVersion   bool
-	quiet      bool
+	fName       string
+	fPrint      bool
+	fOutput     string
+	fOutpkg     string
+	fDir        string
+	fRecursive  bool
+	fAll        bool
+	fIP         bool
+	fTO         bool
+	fCase       string
+	fNote       string
+	fProfile    string
+	fVersion    bool
+	quiet       bool
+	fNamePrefix string
 }
 
 func main() {
@@ -89,6 +90,7 @@ func main() {
 			InPackage: config.fIP,
 			TestOnly:  config.fTO,
 			Case:      config.fCase,
+			Prefix:    config.fNamePrefix,
 		}
 	}
 
@@ -97,6 +99,7 @@ func main() {
 		Note:        config.fNote,
 		Osp:         osp,
 		PackageName: config.fOutpkg,
+		Prefix:      config.fNamePrefix,
 	}
 
 	walker := mockery.Walker{
@@ -133,6 +136,7 @@ func parseConfigFromArgs(args []string) Config {
 	flagSet.StringVar(&config.fProfile, "cpuprofile", "", "write cpu profile to file")
 	flagSet.BoolVar(&config.fVersion, "version", false, "prints the installed version of mockery")
 	flagSet.BoolVar(&config.quiet, "quiet", false, "suppress output to stdout")
+	flagSet.StringVar(&config.fNamePrefix, "prefix", "", "prefix of the generated mock's name")
 
 	flagSet.Parse(args[1:])
 

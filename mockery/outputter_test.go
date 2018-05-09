@@ -26,6 +26,26 @@ func TestFilenameTest(t *testing.T) {
 	assert.Equal(t, "name_test.go", out.filename("name"))
 }
 
+func TestFilenameBarePrefix(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: false, TestOnly: false, Prefix: "prefix"}
+	assert.Equal(t, "prefixname.go", out.filename("name"))
+}
+
+func TestFilenameMockOnlyPrefix(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: true, TestOnly: false, Prefix: "prefix"}
+	assert.Equal(t, "mock_prefixname.go", out.filename("name"))
+}
+
+func TestFilenameMockTestPrefix(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: true, TestOnly: true, Prefix: "prefix"}
+	assert.Equal(t, "mock_prefixname_test.go", out.filename("name"))
+}
+
+func TestFilenameTestPrefix(t *testing.T) {
+	out := FileOutputStreamProvider{InPackage: false, TestOnly: true, Prefix: "prefix"}
+	assert.Equal(t, "prefixname_test.go", out.filename("name"))
+}
+
 func TestUnderscoreCaseName(t *testing.T) {
 	assert.Equal(t, "notify_event", (&FileOutputStreamProvider{}).underscoreCaseName("NotifyEvent"))
 	assert.Equal(t, "repository", (&FileOutputStreamProvider{}).underscoreCaseName("Repository"))

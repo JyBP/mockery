@@ -14,6 +14,7 @@ func configFromCommandLine(str string) Config {
 func TestParseConfigDefaults(t *testing.T) {
 	config := configFromCommandLine("mockery")
 	assert.Equal(t, "", config.fName)
+	assert.Equal(t, "", config.fNamePrefix)
 	assert.Equal(t, false, config.fPrint)
 	assert.Equal(t, "./mocks", config.fOutput)
 	assert.Equal(t, ".", config.fDir)
@@ -26,8 +27,9 @@ func TestParseConfigDefaults(t *testing.T) {
 }
 
 func TestParseConfigFlippingValues(t *testing.T) {
-	config := configFromCommandLine("mockery -name hi -print -output output -dir dir -recursive -all -inpkg -testonly -case case -note note")
+	config := configFromCommandLine("mockery -name hi -prefix bye -print -output output -dir dir -recursive -all -inpkg -testonly -case case -note note")
 	assert.Equal(t, "hi", config.fName)
+	assert.Equal(t, "bye", config.fNamePrefix)
 	assert.Equal(t, true, config.fPrint)
 	assert.Equal(t, "output", config.fOutput)
 	assert.Equal(t, "dir", config.fDir)

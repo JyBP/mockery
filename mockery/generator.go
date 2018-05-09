@@ -41,6 +41,7 @@ type Generator struct {
 	ip               bool
 	iface            *Interface
 	pkg              string
+	prefix           string
 	localPackageName *string
 
 	importsWerePopulated bool
@@ -52,7 +53,7 @@ type Generator struct {
 }
 
 // NewGenerator builds a Generator.
-func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
+func NewGenerator(iface *Interface, pkg string, inPackage bool, prefix string) *Generator {
 
 	var roots []string
 
@@ -64,6 +65,7 @@ func NewGenerator(iface *Interface, pkg string, inPackage bool) *Generator {
 		iface:             iface,
 		pkg:               pkg,
 		ip:                inPackage,
+		prefix:            prefix,
 		localizationCache: make(map[string]string),
 		packagePathToName: make(map[string]string),
 		nameToPackagePath: make(map[string]string),
@@ -205,10 +207,10 @@ func (g *Generator) getLocalizedPath(path string) string {
 func (g *Generator) mockName() string {
 	if g.ip {
 		if ast.IsExported(g.iface.Name) {
-			return "Mock" + g.iface.Name
+			return "Mock" + g.prefix + g.iface.Name
 		}
 		first := true
-		return "mock" + strings.Map(func(r rune) rune {
+		return "mock" + g.prefix + strings.Map(func(r rune) rune {
 			if first {
 				first = false
 				return unicode.ToUpper(r)
@@ -217,7 +219,7 @@ func (g *Generator) mockName() string {
 		}, g.iface.Name)
 	}
 
-	return g.iface.Name
+	return g.prefix + g.iface.Name
 }
 
 func (g *Generator) unescapedImportPath(imp *ast.ImportSpec) string {

@@ -27,6 +27,7 @@ type FileOutputStreamProvider struct {
 	InPackage bool
 	TestOnly  bool
 	Case      string
+	Prefix    string
 }
 
 func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (io.Writer, error, Cleanup) {
@@ -58,13 +59,13 @@ func (this *FileOutputStreamProvider) GetWriter(iface *Interface, pkg string) (i
 
 func (this *FileOutputStreamProvider) filename(name string) string {
 	if this.InPackage && this.TestOnly {
-		return "mock_" + name + "_test.go"
+		return "mock_" + this.Prefix + name + "_test.go"
 	} else if this.InPackage {
-		return "mock_" + name + ".go"
+		return "mock_" + this.Prefix + name + ".go"
 	} else if this.TestOnly {
-		return name + "_test.go"
+		return this.Prefix + name + "_test.go"
 	}
-	return name + ".go"
+	return this.Prefix + name + ".go"
 }
 
 // shamelessly taken from http://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-camel-caseo
